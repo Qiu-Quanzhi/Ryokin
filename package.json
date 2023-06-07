@@ -1,0 +1,113 @@
+{
+  "name": "ryokin",
+  "version": "0.1.0",
+  "description": "涼槿 浏览器",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "postinstall": "electron-builder install-app-deps",
+    "dist": "electron-builder",
+    "dist-win": "electron-builder --win --ia32",
+    "dist-win64": "electron-builder --win --x64",
+    "dist-mac": "electron-builder --mac",
+    "dist-linux": "electron-builder --linux"
+  },
+  "author": "旅禾",
+  "license": "ISC",
+  "build": {
+    "asar": true,
+    "appId": "app.ryokin",
+    "productName": "涼槿",
+    "files": [
+      "renderer/dist/**/*",
+      "main.js",
+      "preload.js"
+    ],
+    "asarUnpack": [
+      "**/renderer/dist/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "./renderer/dist/",
+        "to": "app.asar.unpacked/app"
+      }
+    ],
+    "electronDownload": {
+      "mirror": "https://npm.taobao.org/mirrors/electron/"
+    },
+    "directories": {
+      "output": "dist",
+      "app": "./",
+      "buildResources": "assets"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "./renderer/dist/logo.ico",
+      "installerHeader": "",
+      "uninstallerIcon": "./renderer/dist/uninstall.ico",
+      "perMachine": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "license": ""
+    },
+    "win": {
+      "icon": "./renderer/dist/logo.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    },
+    "linux": {
+      "icon": "./renderer/dist/logo.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "./renderer/dist/logo.ico"
+    },
+    "dmg": {
+      "title": "涼槿",
+      "icon": "./renderer/dist/logo.ico",
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "window": {
+        "x": 400,
+        "y": 400
+      }
+    }
+  },
+  "devDependencies": {
+    "electron": "25.0.1",
+    "electron-builder": "^23.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Qiu-Quanzhi/Ryokin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Qiu-Quanzhi/Ryokin/issues"
+  },
+  "homepage": "https://github.com/Qiu-Quanzhi/Ryokin#readme",
+  "dependencies": {
+    "electron-updater": "^5.3.0",
+    "is-url": "^1.2.4",
+    "update-electron-app": "^2.0.1"
+  }
+}
