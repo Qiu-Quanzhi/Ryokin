@@ -8,7 +8,6 @@ const {
     ipcMain,
     Menu,
     webContents, 
-    dialog, 
     globalShortcut
 } = electron;
 const path = require('path')
@@ -22,7 +21,7 @@ const ENV = process.env.RYOKIN_ENV
 const isWindows = process.platform === 'win32'
 
 const AppName = "涼槿"
-const Version = "23w24d"
+const Version = "23w24e"
 
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
