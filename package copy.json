@@ -1,6 +1,6 @@
 {
   "name": "ryokin",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "涼槿 浏览器",
   "main": "main.js",
   "scripts": {
@@ -11,17 +11,16 @@
     "dist-win": "electron-builder --win --ia32",
     "dist-win64": "electron-builder --win --x64",
     "dist-mac": "electron-builder --mac",
-    "dist-linux": "electron-builder --linux",
-    "test": "electron . https://www.qqzhi.cc/"
+    "dist-linux": "electron-builder --linux"
   },
   "author": "旅禾",
   "license": "ISC",
   "build": {
-    "asar": true,
     "appId": "app.ryokin",
     "productName": "涼槿",
     "files": [
-      "icons/**/*",
+      "!node_modules",
+      "node_modules/electron-updater/**/*",
       "app/**/*",
       "main.js",
       "preload.js"
@@ -30,7 +29,7 @@
       "mirror": "https://npm.taobao.org/mirrors/electron/"
     },
     "directories": {
-      "output": "dist",
+      "output": "build/app",
       "app": "./",
       "buildResources": "assets"
     },
@@ -50,9 +49,10 @@
       "icon": "./icons/logo.ico",
       "target": [
         {
-          "target": "dir",
+          "target": "nsis",
           "arch": [
-            "x64"
+            "x64",
+            "ia32"
           ]
         }
       ]
@@ -98,7 +98,7 @@
   },
   "homepage": "https://github.com/Qiu-Quanzhi/Ryokin#readme",
   "dependencies": {
-    "is-url": "^1.2.4",
+    "electron-updater": "^5.3.0",
     "update-electron-app": "^2.0.1"
   }
 }
