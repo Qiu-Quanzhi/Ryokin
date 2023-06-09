@@ -1,10 +1,12 @@
 import { createApp } from 'vue'
-import './style.css'
+import i18n from './languages/i18n.ts'
 import App from './App.vue'
+
+import './style.css'
 import './main.css'
 
 const app = createApp(App)
-app.mount("#app")
+app.use(i18n).mount("#app")
 
 // import ElementPlus from 'element-plus'
 // import zhCn from 'element-plus/dist/locale/zh-cn.mjs'

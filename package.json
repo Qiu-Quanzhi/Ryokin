@@ -47,12 +47,14 @@
       "license": ""
     },
     "win": {
+      "publisherName": "Tristan Chiu",
       "icon": "./icons/logo.ico",
       "target": [
         {
-          "target": "dir",
+          "target": "nsis",
           "arch": [
-            "x64"
+            "x64",
+            "ia32"
           ]
         }
       ]

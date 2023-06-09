@@ -21,7 +21,7 @@ const ENV = process.env.RYOKIN_ENV
 const isWindows = process.platform === 'win32'
 
 const AppName = "涼槿"
-const Version = "23w24e"
+const Version = "23w24f"
 
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {

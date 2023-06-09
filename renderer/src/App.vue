@@ -1,4 +1,7 @@
 <script setup>
+  import { useI18n } from "vue-I18n";
+  const { t, locale } = useI18n({ useScope: 'global' })
+
   import { ref, onMounted, onUpdated, nextTick } from 'vue'
   import {
     ArrowLeftBold,
@@ -30,6 +33,7 @@
   const $options = new URL(location.href).searchParams
   const sendNotification = ElNotification
   const sendMessage = ElMessage
+
   let tabIndex = -1
   let lastTab = false
   let initTabs = {}
@@ -49,7 +53,7 @@
   const contextMenuMainMore = ref(false)
   const contextMenuMainFlags = ref({ target: {} })
   const popMenu = ref('')
-  const userAgent = ref(navigator.userAgent.replace(/Electron\/\d*(\.\d)*\s/, "").replace("ryokin","Ryokin"))
+  const userAgent = ref(navigator.userAgent.replace(/Electron\/\d*(\.\d)*\s/, "").replace("ryokin", "Ryokin"))
   console.log(`UA: ${userAgent.value}`)
   const activeTabsId = ref('')
   const newTabPos = ref('0')
@@ -109,7 +113,7 @@
   const addTab = (url = newTabUrl.value) => {
     const newTabId = `${++tabIndex}`
     webTabs.value.push({
-      title: '正在加载',
+      title: t('app.message.loading'),
       id: newTabId,
       url: url,
       urlInput: url,
@@ -299,7 +303,7 @@
       case 'copy':
         $("#webview" + activeTabsId.value).copy()
         sendMessage({
-          message: '复制成功 (≧▽≦)',
+          message: t('app.message.copySuccess'),
           type: 'success'
         })
         break
@@ -331,7 +335,7 @@
         case 'copy':
           document.execCommand('copy', false)
           sendMessage({
-            message: '复制成功 (≧▽≦)',
+            message: t('app.message.copySuccess'),
             type: 'success'
           })
           break
@@ -514,7 +518,7 @@
   }
   const showBuildingTip = () => {
     sendMessage({
-      message: '区域待建 ~(￣▽￣)~',
+      message: t('app.message.uncompletedFunction'),
       type: 'warning'
     })
     doWebviewFocus()
@@ -529,10 +533,10 @@
       update()
     }
     sendNotification({
-      title: '欢迎来到 旅禾的浏览器 「涼槿」',
+      title: t('app.welcome.title'),
       dangerouslyUseHTMLString: true,
-      message: `<b>夏季测试版本 ${version}</b> (${userAgent.value.match(/Ryokin\/\d*(\.\d)*/)[0]})`,
-      //duration: 0,
+      message: t('app.welcome.message', { version: version, buildVersion: userAgent.value.match(/Ryokin\/\d*(\.\d)*/)[0] }),
+      duration: 10000,
       offset: 80
     })
   })
@@ -633,8 +637,9 @@
       <el-button v-else text class="toolButton" :icon="Refresh" @click="doWebReload" style="font-size: 17px;" />
     </el-button-group>
     <el-input id="addressBar" v-model="webTabs[getTabIndex(activeTabsId)].urlInput" @focus="onAddressBarFocus"
-      @click.right="onAddressBarContextMenu" @keydown.esc="doAddressInputRecover" @keydown.enter.exact="doWebGo()" @keydown.ctrl.enter.exact="doWebGo('force')"
-      class="addressBar" :style="'width:'+';margin-left: 5px;margin-right: 5px;'">
+      @click.right="onAddressBarContextMenu" @keydown.esc="doAddressInputRecover" @keydown.enter.exact="doWebGo()"
+      @keydown.ctrl.enter.exact="doWebGo('force')" class="addressBar"
+      :style="'width:'+';margin-left: 5px;margin-right: 5px;'">
       <template #append style="background-color: var(--el-fill-color-blank);">
         <view>
           <el-button :title="Math.round(zoomFactors[webTabs[getTabIndex(activeTabsId)].zoomLevel]*100)+'%'" size="small"
