@@ -5,9 +5,11 @@ import en from "./en.ts"
 
 export default {
     'zh': zh_Hans,
+    'zh-CN': zh_Hans,
     'zh-HK': zh_Hant,
     'zh-MO': zh_Hant,
     'zh-TW': zh_Hant,
+    'zh-SG': zh_Hans,
     'ja': ja,
     'en': en
 }

@@ -85,3 +85,7 @@ button {
 .addressBar>.el-input__wrapper>.el-input__inner{
 	height: 25px;
 }
+
+.el-button.is-text:not(.is-disabled):focus{
+	background-color: transparent;
+}

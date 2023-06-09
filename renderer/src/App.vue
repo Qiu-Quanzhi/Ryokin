@@ -1,5 +1,5 @@
 <script setup>
-  import { useI18n } from "vue-I18n";
+  import { useI18n } from "vue-i18n";
   const { t, locale } = useI18n({ useScope: 'global' })
 
   import { ref, onMounted, onUpdated, nextTick } from 'vue'
@@ -23,7 +23,8 @@
     ZoomIn,
     ZoomOut,
     Document as iconDocument,
-    Loading as iconLoading
+    Loading as iconLoading,
+    Menu as iconMenu
   } from '@element-plus/icons-vue'
   import unibox from './utils/unibox'
   const $ = (query) => {
@@ -37,11 +38,13 @@
   let tabIndex = -1
   let lastTab = false
   let initTabs = {}
+  let initExt = false
+  let exts = localStorage.exts ? JSON.parse(localStorage.exts) : {}
   const tabContextMenuIndex = ref(-1)
   const version = $options.get('ver') || ""
-  const startUrl = $options.get('url') || ref('https://limestart.cn/')
-  const newTabUrl = $options.get('newTabUrl') || ref('https://limestart.cn/')
-  const searchUrl = $options.get('searchUrl') || ref('https://cn.bing.com/search?q=')
+  const startUrl = ref($options.get('url') || 'https://limestart.cn/')
+  const newTabUrl = ref($options.get('newTabUrl') || 'https://limestart.cn/')
+  const searchUrl = ref($options.get('searchUrl') || 'https://cn.bing.com/search?q=')
   const targetUrl = ref('')
   const targetUrlBarVisible = ref(false)
   const contextMenuPos = ref(['50px', '100px'])
@@ -89,14 +92,54 @@
     "9": 5.00
   }
   $main.handleTab((event, value) => {
-    switch (value.action) {
-      case 'add':
-        addTab(value.url)
-        break
-    }
+    handleTabsEdit(value.url||undefined, value.action)
   })
   $main.handleZoom((event, action) => {
     doWebZoom(action)
+  })
+  $main.handleExt((event, action, id, name, version, manifest, path, url) => {
+    //console.log(action, id, name, version, manifest)
+    switch (action) {
+      case 'load':
+        sendNotification({
+          title: t('app.ext.load', { name, version }),
+          message: `${manifest.description}<br>id: ${id}`,
+          dangerouslyUseHTMLString: true,
+          offset: 80
+        })
+        break
+      case 'ready':
+        sendNotification({
+          title: t('app.ext.ready', { name, version }),
+          message: `${manifest.description}<br>id: ${id}`,
+          dangerouslyUseHTMLString: true,
+          offset: 80
+        })
+        exts[id] = { name, version, manifest, path, url }
+        //console.log(exts)
+        localStorage.setItem('exts', JSON.stringify(exts))
+        if (url + manifest.chrome_url_overrides.newtab) {
+          if (webTabs.value[getTabIndex(activeTabsId.value)].url == newTabUrl.value) {
+            newTabUrl.value = url + manifest.chrome_url_overrides.newtab
+            handleTabsEdit(activeTabsId.value, 'remove')
+            lastTab = false
+          } else {
+            newTabUrl.value = url + manifest.chrome_url_overrides.newtab
+          }
+        }
+        break
+      case 'unload':
+        sendNotification({
+          title: t('app.ext.unload', { name }),
+          message: `${manifest.description}<br>id: ${id}`,
+          dangerouslyUseHTMLString: true,
+          offset: 80
+        })
+        delete exts[id]
+        //console.log(exts)
+        localStorage.setItem('exts', JSON.stringify(exts))
+        break
+    }
   })
 
   const handleTabsEdit = (
@@ -126,7 +169,7 @@
     //nextTick(initWebview(newTabId))
     //if(tabIndex!=0)url == newTabUrl.value ? doAddressInputFocus() : () => { }
   }
-  const removeTab = (targetId) => {
+  const removeTab = (targetId = activeTabsId.value) => {
     let tabs = webTabs.value
     if (tabs.length <= 1) {
       if (lastTab)
@@ -239,8 +282,17 @@
     })
     $("#webview" + id).addEventListener('dom-ready', (e) => {
       if (initTabs[id] !== true) {
-        $main.webReg($("#webview" + id).getWebContentsId())
+        $main.webReg($("#webview" + id).getWebContentsId(), { ext: initExt })
         initTabs[id] = true
+      }
+      if (!initExt) {
+        for (const ext in exts) {
+          if (Object.hasOwnProperty.call(exts, ext)) {
+            const data = exts[ext];
+            doExtLoad(data.path)
+          }
+        }
+        initExt = true
       }
       webTabs.value[getTabIndex(activeTabsId.value)].zoomLevel = getZoomLevel()
     })
@@ -298,7 +350,6 @@
     doContextMenuMainShow(e.x, e.y)
   }
   const onContextMenuClick = (action, data) => {
-    action == "more" ? null : doWebviewFocus()
     switch (action) {
       case 'copy':
         $("#webview" + activeTabsId.value).copy()
@@ -409,6 +460,11 @@
     contextMenuMainFlags.value = e
     doContextMenuMainShow(e.x, e.y)
   }
+  const onExtButtonClick = () => {
+    $main.dialogOpen({ properties: ['openDirectory'] }).then((result) => {
+      doExtLoad(result[0])
+    })
+  }
 
   const winClose = () => {
     $("#winClose").blur()
@@ -435,15 +491,16 @@
   const doAddressInputFocus = () => {
     $("#addressBar").focus()
   }
-  const doAddressInputRecover = (id = activeTabsId.value) => {
-    webTabs.value[getTabIndex(id)].urlInput = decodeURI(webTabs.value[getTabIndex(id)].url)
-    doWebviewFocus()
+  const doAddressInputRecover = (e) => {
+    let id = activeTabsId.value
+    let urlInput = webTabs.value[getTabIndex(id)].urlInput
+    webTabs.value[getTabIndex(id)].urlInput = decodeURIComponent(webTabs.value[getTabIndex(id)].url)
+    e ? urlInput == decodeURIComponent(webTabs.value[getTabIndex(id)].url) ? doWebviewFocus() : onAddressBarFocus() : null
   }
   const doWebviewFocus = () => {
     $("#webview" + activeTabsId.value) ? $("#webview" + activeTabsId.value).focus() : null
   }
   const doWebGo = (cmd) => {
-    // console.error('dowebgo',cmd)
     if (cmd == "force")
       webTabs.value[getTabIndex(activeTabsId.value)].url = webTabs.value[getTabIndex(activeTabsId.value)].urlInput
     else
@@ -465,6 +522,11 @@
   const doWebReload = () => {
     $("#webview" + activeTabsId.value).reload()
     doAddressInputRecover()
+  }
+  const doWebClearHistory = () => {
+    $("#webview" + activeTabsId.value).clearHistory()
+    canWebBackForward()
+    doWebviewFocus()
   }
   const doWebZoom = (action) => {
     let currentZoomLevel = getZoomLevel()
@@ -506,6 +568,21 @@
     contextMenuMainPos.value = [x + 20 + 'px', y + 20 + 'px']
     contextMenuMainVisible.value = true
   }
+  const doExtLoad = (path) => {
+    $main.ext($('#webview' + activeTabsId.value).getWebContentsId(), 'load', path)
+  }
+  const doExtRemove = () => {
+    $main.ext($('#webview' + activeTabsId.value).getWebContentsId(), 'remove', webTabs.value[getTabIndex(activeTabsId.value)].urlInput)
+    doAddressInputRecover()
+  }
+  const doExtReload = () => {
+    for (const ext in exts) {
+      if (Object.hasOwnProperty.call(exts, ext)) {
+        const data = exts[ext];
+        doExtLoad(data.path)
+      }
+    }
+  }
   const update = () => {
     initNewTabButton()
     initDragArea()
@@ -513,6 +590,7 @@
   }
 
   const init = () => {
+    //console.log(startUrl.value)
     addTab(startUrl.value)
     removeTab('')
   }
@@ -535,7 +613,7 @@
     sendNotification({
       title: t('app.welcome.title'),
       dangerouslyUseHTMLString: true,
-      message: t('app.welcome.message', { version: version, buildVersion: userAgent.value.match(/Ryokin\/\d*(\.\d)*/)[0] }),
+      message: `<b>${t('app.welcome.message')} ${version}</b> (${userAgent.value.match(/Ryokin\/\d*(\.\d)*/)[0]})`,
       duration: 10000,
       offset: 80
     })
@@ -629,7 +707,7 @@
     <el-button-group id="toolBarLeft">
       <el-button :disable="!webTabs[getTabIndex(activeTabsId)].canGoBack" text
         :class="['toolButton',webTabs[getTabIndex(activeTabsId)].canGoBack?'':'disabled']" :icon="ArrowLeftBold"
-        @click="doWebBack" />
+        @click.left="doWebBack" @click.middle="doWebClearHistory" />
       <el-button v-show="webTabs[getTabIndex(activeTabsId)].canGoForward" text class="toolButton" :icon="ArrowRightBold"
         @show="update" @click="doWebForward" />
       <el-button v-if="webTabs[getTabIndex(activeTabsId)].loading" text class="toolButton" :icon="Close"
@@ -662,9 +740,11 @@
       </template>
     </el-input>
     <el-button-group id="toolBarRight">
+      <el-button @click.left="onExtButtonClick" @click.middle="doExtRemove" @click.right="doExtReload" text
+        class="toolButton" :icon="iconMenu" style="font-size: 17px;" />
       <el-button @click="showBuildingTip" text class="toolButton" :icon="More" />
+      <!-- <el-input v-model="webTabs[getTabIndex(activeTabsId)].url"></el-input> -->
     </el-button-group>
-    <!-- <el-input v-model="webTabs[getTabIndex(activeTabsId)].url"></el-input> -->
   </el-row>
 </template>
 

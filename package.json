@@ -48,6 +48,11 @@
     },
     "win": {
       "publisherName": "Tristan Chiu",
+      "signingHashAlgorithms": [
+        "sha256"
+      ],
+      "signDlls": true,
+      "rfc3161TimeStampServer": "http://timestamp.digicert.com",
       "icon": "./icons/logo.ico",
       "target": [
         {

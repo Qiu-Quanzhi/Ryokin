@@ -9,7 +9,12 @@ const zh_Hant ={
         },
         welcome: {
             title: "歡迎來到 @:author{'的瀏覽器「'}@:name{'」'}",
-            message: "<b>夏季測試版本 {version}</b> ({buildVersion})"
+            message: "夏季測試版本"
+        },
+        ext: {
+            load: '加載擴展「{name}」 {version}',
+            ready: '擴展「{name}」已就緒',
+            unload: '卸載擴展「{name}」 {version}'
         }
     }
 }

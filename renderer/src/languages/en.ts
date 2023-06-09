@@ -9,7 +9,12 @@ const en ={
         },
         welcome: {
             title: "{'Welcome to 「'}@:name{'」!'}",
-            message: "<b>Summer Alpha {version}</b> ({buildVersion})"
+            message: "Summer Alpha"
+        },
+        ext: {
+            load: 'Loading extension「{name}」 {version}',
+            ready: 'Extension 「{name}」 is ready',
+            unload: 'Unloading extension「{name}」 {version}'
         }
     }
 }

@@ -9,7 +9,12 @@ const ja ={
         },
         welcome: {
             title: "{'ようこそ「'}@:name{'」ブラウザへ'}",
-            message: "<b>夏のテスト版 {version}</b> ({buildVersion})"
+            message: "夏のテスト版"
+        },
+        ext: {
+            load: 'ロードプラグイン「{name}」 {version}',
+            ready: 'プラグイン「{name}」の準備完了',
+            unload: 'アンロードプラグイン「{name}」 {version}'
         }
     }
 }

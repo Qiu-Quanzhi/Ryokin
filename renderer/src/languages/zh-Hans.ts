@@ -9,7 +9,12 @@ const zh_Hans ={
         },
         welcome: {
             title: "欢迎来到 @:author{'的浏览器「'}@:name{'」'}",
-            message: "<b>夏季测试版本 {version}</b> ({buildVersion})"
+            message: "夏季测试版本"
+        },
+        ext: {
+            load: '加载扩展「{name}」 {version}',
+            ready: '扩展「{name}」已就绪',
+            unload: '卸载扩展「{name}」 {version}'
         }
     }
 }
