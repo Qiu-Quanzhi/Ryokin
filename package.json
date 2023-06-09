@@ -12,7 +12,10 @@
     "dist-win64": "electron-builder --win --x64",
     "dist-mac": "electron-builder --mac",
     "dist-linux": "electron-builder --linux",
-    "test": "electron . https://www.qqzhi.cc/"
+    "test": "electron . https://www.qqzhi.cc/",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "author": "旅禾",
   "license": "ISC",
@@ -94,7 +97,8 @@
   },
   "devDependencies": {
     "electron": "25.0.1",
-    "electron-builder": "^23.6.0"
+    "electron-builder": "^23.6.0",
+    "vitepress": "^1.0.0-beta.1"
   },
   "repository": {
     "type": "git",
