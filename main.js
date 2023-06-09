@@ -1,5 +1,8 @@
 'use strict';
 
+const AppName = "涼槿"
+const Version = "23w24f"
+
 const electron = require('electron');
 const {
     app,
@@ -19,9 +22,6 @@ let win
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 const ENV = process.env.RYOKIN_ENV
 const isWindows = process.platform === 'win32'
-
-const AppName = "涼槿"
-const Version = "23w24f"
 
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
