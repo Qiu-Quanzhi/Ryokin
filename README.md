@@ -51,7 +51,7 @@
 
 ## 23w24f alpha [2023.6.9 - v0.1.2-0]
 
-1. 增加i18n多语言支持：中文(通用简繁)、English、日本語，暂无相关应用内设置，可通过调试localStorage.lang或renderer/src/languages/i18n.ts调整
+1. 增加i18n多语言支持：中文(通用简繁)、English、日本語，应用内跟随系统设置，可通过调试localStorage.lang或renderer/src/languages/i18n.ts调整
 2. 现在对发行版本进行数字签名
 
 ## 23w24f Beta [2023.6.9 - v0.1.2-1]
