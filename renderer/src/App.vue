@@ -92,7 +92,7 @@
     "9": 5.00
   }
   $main.handleTab((event, value) => {
-    handleTabsEdit(value.url||undefined, value.action)
+    handleTabsEdit(value.action=='remove'?activeTabsId.value:value.url, value.action)
   })
   $main.handleZoom((event, action) => {
     doWebZoom(action)
@@ -143,13 +143,13 @@
   })
 
   const handleTabsEdit = (
-    targetId,
+    option,
     action
   ) => {
     if (action === 'add') {
-      addTab()
+      addTab(option)
     } else if (action === 'remove') {
-      removeTab(targetId)
+      removeTab(option)
     }
     update()
   }

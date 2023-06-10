@@ -2,21 +2,24 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: "涼槿",
+  title: "涼槿 Ryokin",
   description: "一只简明主义的浏览器",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: '主页', link: '/' },
-      { text: 'Examples', link: '/markdown-examples' }
+      { text: '下载站点', items: [
+        { text: 'Github Release', link: 'https://github.com/Qiu-Quanzhi/Ryokin/releases/' },
+        { text: '微云', link: 'https://share.weiyun.com/3y8qIZJe' }
+      ] }
     ],
 
     sidebar: [
       {
-        text: 'Examples',
+        text: '下载站点',
         items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
+          { text: 'Github Release', link: '/markdown-examples' },
+          { text: '微云', link: 'https://share.weiyun.com/3y8qIZJe' }
         ]
       }
     ],
