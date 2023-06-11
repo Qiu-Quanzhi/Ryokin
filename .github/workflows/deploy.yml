@@ -3,6 +3,9 @@ permissions: write-all
 on:
   push:
     branches:
+      - docs
+  pull_request:
+    branches:
       - main
 
 jobs:
@@ -21,3 +24,9 @@ jobs:
         
       - name: Copy Logo
         run: cp logo.svg docs/.vitepress/dist/ -f
+        
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/.vitepress/dist
