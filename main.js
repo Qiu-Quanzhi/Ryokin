@@ -90,7 +90,7 @@ function createWindow() {
 app.on('ready', () => {
     createWindow()
     win.webContents.on('before-input-event', (event, input) => {
-        if (input.control && input.key.toLowerCase() === 'n' || input.key.toLowerCase() === 't') {
+        if (input.control && (input.key.toLowerCase() === 'n' || input.key.toLowerCase() === 't')) {
             win.webContents.send('tab', { action: 'add' })
             event.preventDefault()
         }
