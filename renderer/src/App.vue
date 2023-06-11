@@ -670,7 +670,7 @@
     <el-text size="small" truncated style="max-width:30vw;text-align: start;">{{targetUrl}}</el-text>
   </view>
   <view class="newTab" :style="'left: '+newTabPos">
-    <el-button text style="height: 30px;width: 30px;" :icon="Plus" @click="handleTabsEdit(activeTabsId,'add')" />
+    <el-button text style="height: 30px;width: 30px;" :icon="Plus" @click="handleTabsEdit(newTabUrl,'add')" />
   </view>
   <view id="winBar" class="winBar">
     <el-button-group>

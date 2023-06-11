@@ -1,7 +1,7 @@
 'use strict';
 
 const AppName = "涼槿"
-const Version = "23w24f"
+const Version = "23w24g"
 
 const electron = require('electron');
 const {
