@@ -11,7 +11,7 @@ hero:
     alt: 涼槿
   actions:
     - theme: brand
-      text: 下载夏测版
+      text: 下载夏测版 [Windows 11/10 64位]
       link: https://github.com/Qiu-Quanzhi/Ryokin/releases/
     - theme: alt
       text: 备用下载

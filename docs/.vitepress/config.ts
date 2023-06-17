@@ -18,7 +18,7 @@ export default defineConfig({
       {
         text: '下载站点',
         items: [
-          { text: 'Github Release', link: '/markdown-examples' },
+          { text: 'Github Release', link: 'https://github.com/Qiu-Quanzhi/Ryokin/releases/' },
           { text: '微云', link: 'https://share.weiyun.com/3y8qIZJe' }
         ]
       }
