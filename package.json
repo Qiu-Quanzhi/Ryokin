@@ -12,7 +12,7 @@
     "dist-win64": "electron-builder --win --x64",
     "dist-mac": "electron-builder --mac",
     "dist-linux": "electron-builder --linux",
-    "test": "electron . https://www.qqzhi.cc/",
+    "test": "electron . \"E:\\信宜市教育城幼儿园\\桌面\\(冼春玲）2023年寒假教师研修结业证书证书.pdf\"",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs"
@@ -59,7 +59,7 @@
       "icon": "./icons/logo.ico",
       "target": [
         {
-          "target": "dir",
+          "target": "nsis",
           "arch": [
             "x64"
           ]

@@ -59,6 +59,7 @@
   const userAgent = ref(navigator.userAgent.replace(/Electron\/\d*(\.\d)*\s/, "").replace("ryokin", "Ryokin"))
   console.log(`UA: ${userAgent.value}`)
   const activeTabsId = ref('')
+  const lastTabsId = ref('')
   const newTabPos = ref('0')
   const dragAreaHeight = ref('0')
   const webTabs = ref([{
@@ -190,7 +191,7 @@
     if (activeId === targetId) {
       tabs.forEach((tab, index) => {
         if (tab.id === targetId) {
-          const nextTab = tabs[index + 1] || tabs[index - 1]
+          const nextTab = tabs[getTabIndex(lastTabsId.value)] || (tabs[index + 1] || tabs[index - 1])
           if (nextTab) {
             activeId = nextTab.id
           }
@@ -343,6 +344,7 @@
     update()
   }
   const onTabBeforeChange = (newId, oldId) => {
+    lastTabsId.value=oldId
     return true
     canWebBackForward(newId)
   }
@@ -467,7 +469,12 @@
       doExtLoad(result[0])
     })
   }
-
+  const onBlankDragEnter=(e)=>{
+    e.preventDefault();
+  }
+  const onBlankDrop=(e)=>{
+    handleTabsEdit(unibox.input(e.dataTransfer.getData("Text"),searchUrl.value)[0],"add")
+  }
   const winClose = () => {
     $("#winClose").blur()
     $main.winClose()
@@ -543,7 +550,7 @@
         $("#webview" + activeTabsId.value).setZoomFactor(1.0)
         break
     }
-    webTabs.value[activeTabsId.value].zoomLevel = getZoomLevel()
+    webTabs.value[getTabIndex(activeTabsId.value)].zoomLevel = getZoomLevel()
   }
   const doPopMenuShow = (id) => {
     popMenu.value = id
@@ -623,7 +630,7 @@
 </script>
 
 <template>
-  <view class="dragArea winDrag" :style="'height: '+dragAreaHeight"></view>
+  <view class="dragArea winDrag" :style="'height: '+dragAreaHeight"  @drop="onBlankDrop" @dragenter="onBlankDragEnter" @dragover="onBlankDragEnter" ></view>
   <view :class="['mask',contextMenuVisible||contextMenuMainVisible||popMenu!=''?'':'hide']" @wheel.passive="onMaskClick"
     @keydown.esc="onMaskClick" @mouseup="onMaskClick" style="left: 0;"></view>
   <view id="contextMenu" :class="['contextMenu',contextMenuVisible?'':'hide']" @wheel.passive="onMaskClick"
@@ -672,7 +679,7 @@
     <el-text size="small" truncated style="max-width:30vw;text-align: start;">{{targetUrl}}</el-text>
   </view>
   <view class="newTab" :style="'left: '+newTabPos">
-    <el-button text style="height: 30px;width: 30px;" :icon="Plus" @click="handleTabsEdit(newTabUrl,'add')" />
+    <el-button text style="height: 30px;width: 30px;" :icon="Plus" @drop="onBlankDrop" @dragenter="onBlankDragEnter" @dragover="onBlankDragEnter" @click="handleTabsEdit(newTabUrl,'add')" />
   </view>
   <view id="winBar" class="winBar">
     <el-button-group>
@@ -702,7 +709,7 @@
           <el-space></el-space>
         </el-row>
       </template>
-      <webview disablewebsecurity disableblinkfeatures="FileSystemAccess, FileSystemAccessAccessHandle" :useragent="userAgent" :id="'webview'+item.id" class="webview" :src="item.url||''" allowpopups></webview>
+      <webview enableblinkfeatures="FileSystemAccess, FileSystemAccessAccessHandle" webPreferences="{navigateOnDragDrop: true}" :useragent="userAgent" :id="'webview'+item.id" class="webview" :src="item.url||''" allowpopups></webview>
     </el-tab-pane>
   </el-tabs>
   <el-row class="toolbar">

@@ -1,7 +1,7 @@
 'use strict';
 
 const AppName = "涼槿"
-const Version = "23w24g"
+const Version = "23w25a"
 
 const electron = require('electron');
 const {
@@ -45,12 +45,9 @@ if (!gotTheLock) {
         }
         if (isWindows) {
             let commands = commandLine.slice();
-            let lastCmd = decodeURI(commands.pop());
-            if (isUrl(lastCmd)) {
-                win.webContents.send('tab', { action: 'add', url: lastCmd })
-            } else {
-                win.webContents.send('tab', { action: 'add' })
-            }
+            let lastCmd = decodeURI(commands.pop().replace('"', ''));
+            let option = (commands.length > (ENV === 'DEV') ? (isUrl(lastCmd) ? '' : 'file://') + lastCmd : '')
+            win.webContents.send('tab', { action: 'add', url: option })
         }
     });
 }
