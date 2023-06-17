@@ -1,0 +1,115 @@
+{
+  "name": "ryokin",
+  "version": "0.1.2",
+  "description": "涼槿 浏览器",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "postinstall": "electron-builder install-app-deps",
+    "dist": "electron-builder",
+    "dist-win": "electron-builder --win --ia32",
+    "dist-win64": "electron-builder --win --x64",
+    "dist-mac": "electron-builder --mac",
+    "dist-linux": "electron-builder --linux",
+    "test": "electron . https://www.qqzhi.cc/",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "author": "旅禾",
+  "license": "ISC",
+  "build": {
+    "asar": true,
+    "appId": "app.ryokin",
+    "productName": "涼槿",
+    "files": [
+      "icons/**/*",
+      "app/**/*",
+      "main.js",
+      "preload.js"
+    ],
+    "electronDownload": {
+      "mirror": "https://npm.taobao.org/mirrors/electron/"
+    },
+    "directories": {
+      "output": "dist",
+      "app": "./",
+      "buildResources": "assets"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "./icons/logo.ico",
+      "installerHeader": "",
+      "uninstallerIcon": "./icons/uninstall.ico",
+      "perMachine": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "license": ""
+    },
+    "win": {
+      "publisherName": "Tristan Chiu",
+      "signingHashAlgorithms": [
+        "sha256"
+      ],
+      "signDlls": true,
+      "rfc3161TimeStampServer": "http://timestamp.digicert.com",
+      "icon": "./icons/logo.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    },
+    "linux": {
+      "icon": "./icons/logo.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "./icons/logo.ico"
+    },
+    "dmg": {
+      "title": "涼槿",
+      "icon": "./icons/logo.ico",
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "window": {
+        "x": 400,
+        "y": 400
+      }
+    }
+  },
+  "devDependencies": {
+    "electron": "25.0.1",
+    "electron-builder": "^23.6.0",
+    "vitepress": "^1.0.0-beta.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Qiu-Quanzhi/Ryokin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Qiu-Quanzhi/Ryokin/issues"
+  },
+  "homepage": "https://github.com/Qiu-Quanzhi/Ryokin#readme",
+  "dependencies": {
+    "is-url": "^1.2.4",
+    "update-electron-app": "^2.0.1"
+  }
+}
