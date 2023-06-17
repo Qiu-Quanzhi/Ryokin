@@ -43,7 +43,7 @@
       "allowToChangeInstallationDirectory": true,
       "installerIcon": "./icons/logo.ico",
       "installerHeader": "",
-      "uninstallerIcon": "./icons/uninstall.ico",
+      "uninstallerIcon": "./icons/logo.ico",
       "perMachine": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
@@ -59,10 +59,9 @@
       "icon": "./icons/logo.ico",
       "target": [
         {
-          "target": "nsis",
+          "target": "dir",
           "arch": [
-            "x64",
-            "ia32"
+            "x64"
           ]
         }
       ]
@@ -109,7 +108,6 @@
   },
   "homepage": "https://github.com/Qiu-Quanzhi/Ryokin#readme",
   "dependencies": {
-    "is-url": "^1.2.4",
-    "update-electron-app": "^2.0.1"
+    "is-url": "^1.2.4"
   }
 }
